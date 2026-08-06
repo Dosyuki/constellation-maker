@@ -21,7 +21,7 @@ const ZODIAC:Constellation[]=[
 {id:"aquarius",th:"ราศีกุมภ์",en:"AQUARIUS",symbol:"♒",points:[{id:"a",x:25,y:43},{id:"b",x:39,y:33},{id:"c",x:51,y:48},{id:"d",x:64,y:38},{id:"e",x:78,y:51}],edges:[["a","b"],["b","c"],["c","d"],["d","e"]]},
 {id:"pisces",th:"ราศีมีน",en:"PISCES",symbol:"♓",points:[{id:"a",x:24,y:39},{id:"b",x:37,y:51},{id:"c",x:50,y:45},{id:"d",x:65,y:54},{id:"e",x:78,y:38}],edges:[["a","b"],["b","c"],["c","d"],["d","e"]]}
 ];
-const DECOYS:Point[]=[{id:"x1",x:16,y:67},{id:"x2",x:28,y:25},{id:"x3",x:42,y:69},{id:"x4",x:55,y:24},{id:"x5",x:68,y:68},{id:"x6",x:82,y:48},{id:"x7",x:20,y:42},{id:"x8",x:74,y:27}];
+const DECOYS:Point[]=[{id:"x1",x:12,y:72},{id:"x2",x:20,y:22},{id:"x3",x:30,y:72},{id:"x4",x:40,y:23},{id:"x5",x:50,y:72},{id:"x6",x:60,y:22},{id:"x7",x:70,y:72},{id:"x8",x:84,y:24},{id:"x9",x:88,y:60},{id:"x10",x:14,y:45},{id:"x11",x:34,y:30},{id:"x12",x:46,y:61},{id:"x13",x:58,y:66},{id:"x14",x:76,y:31},{id:"x15",x:83,y:51},{id:"x16",x:24,y:62}];
 function shuffle<T>(items:T[]){const copy=[...items];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
 function centeredPosition(p:Point){return {left:`calc(50% + ${p.x-50}%)`,top:`calc(50% + ${(p.y-39)/.78}%)`}}
 function ConstellationMap({mode,current,nodes,targetIds,selected,phase,answer,onToggle}:{mode:"wall"|"floor";current:Constellation;nodes:Point[];targetIds:Set<string>;selected:Set<string>;phase:Phase;answer:boolean;onToggle:(id:string)=>void}){
@@ -33,13 +33,13 @@ function ConstellationMap({mode,current,nodes,targetIds,selected,phase,answer,on
 }
 
 export default function Home(){
- const [phase,setPhase]=useState<Phase>("idle"),[rounds,setRounds]=useState<Constellation[]>([]),[roundIndex,setRoundIndex]=useState(0),[timeLeft,setTimeLeft]=useState(40),[countdown,setCountdown]=useState(3),[selected,setSelected]=useState<Set<string>>(new Set()),[results,setResults]=useState<RoundResult[]>([]),[fastMode,setFastMode]=useState(false),[resetIn,setResetIn]=useState(12),[roundDecoys,setRoundDecoys]=useState<Point[]>(DECOYS.slice(0,4));
+ const [phase,setPhase]=useState<Phase>("idle"),[rounds,setRounds]=useState<Constellation[]>([]),[roundIndex,setRoundIndex]=useState(0),[timeLeft,setTimeLeft]=useState(40),[countdown,setCountdown]=useState(3),[selected,setSelected]=useState<Set<string>>(new Set()),[results,setResults]=useState<RoundResult[]>([]),[fastMode,setFastMode]=useState(false),[resetIn,setResetIn]=useState(12),[roundDecoys,setRoundDecoys]=useState<Point[]>(DECOYS.slice(0,9));
  const timerRef=useRef<ReturnType<typeof setInterval>|null>(null),current=rounds[roundIndex]??ZODIAC[2];
  const total=results.reduce((s,r)=>s+r.score,0),maxTotal=results.reduce((s,r)=>s+r.max,0),sessionMax=rounds.reduce((s,r)=>s+r.points.length,0);
  const nodes=useMemo(()=>[...current.points,...roundDecoys],[current,roundDecoys]);
  const targetIds=useMemo(()=>new Set(current.points.map(p=>p.id)),[current]);
  const clearTimer=()=>{if(timerRef.current){clearInterval(timerRef.current);timerRef.current=null}};
- const startHint=useCallback((index:number)=>{clearTimer();setRoundIndex(index);setRoundDecoys(shuffle(DECOYS).slice(0,4));setSelected(new Set());setPhase("hint");window.setTimeout(()=>{setCountdown(3);setPhase("countdown")},2000)},[]);
+ const startHint=useCallback((index:number)=>{clearTimer();setRoundIndex(index);const decoyCount=9+Math.floor(Math.random()*4);setRoundDecoys(shuffle(DECOYS).slice(0,decoyCount));setSelected(new Set());setPhase("hint");window.setTimeout(()=>{setCountdown(3);setPhase("countdown")},2000)},[]);
  const startGame=()=>{const picked=shuffle(ZODIAC).slice(0,5);setRounds(picked);setResults([]);setRoundIndex(0);setSelected(new Set());window.setTimeout(()=>startHint(0),0)};
  const evaluate=useCallback(()=>{clearTimer();const score=current.points.filter(p=>selected.has(p.id)).length;const result={id:current.id,th:current.th,en:current.en,score,max:current.points.length};setResults(prev=>[...prev,result]);setPhase("reveal");window.setTimeout(()=>setPhase("score"),3000);window.setTimeout(()=>roundIndex>=4?setPhase("summary"):startHint(roundIndex+1),5000)},[current,selected,roundIndex,startHint]);
  useEffect(()=>{if(phase!=="countdown")return;const id=window.setInterval(()=>setCountdown(v=>{if(v<=1){window.clearInterval(id);setTimeLeft(fastMode?10:40);setPhase("play");return 0}return v-1}),1000);return()=>window.clearInterval(id)},[phase,fastMode]);
