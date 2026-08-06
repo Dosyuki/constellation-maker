@@ -18,14 +18,14 @@
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
 /* Shared coordinate stage keeps the wall and floor constellations geometrically identical. */
-.constellation-stage{position:absolute;left:50%;transform:translateX(-50%);aspect-ratio:3.25/1;pointer-events:none}
-.wall-constellation{left:50%;right:auto;top:132px;bottom:auto;width:min(76%,1200px);aspect-ratio:3.25/1;transform:translateX(-50%)}
-.floor-constellation{z-index:3;top:92px;width:min(84%,1500px)}
+.constellation-stage{position:absolute;left:50%;top:56%;width:min(78vw,1320px);aspect-ratio:3.25/1;transform:translate(-50%,-50%);transform-origin:center;pointer-events:none}
+.wall-constellation{z-index:4;right:auto;bottom:auto}
+.floor-constellation{z-index:3}
 .floor-constellation .star-node{pointer-events:auto}
 .auto-reset{display:inline-block;border:1px solid #4c7a9680;background:#081b2a;padding:9px 16px;color:#8db7cd;font-size:11px}
 @keyframes hintFlash{0%,100%{opacity:0}22%,72%{opacity:1}}
 .phase-hint .wall-star.answer,.phase-hint .star-node.answer,.phase-hint .wall-line.visible,.phase-hint .line.visible{animation:hintFlash 2s ease-in-out both}
-@media(max-width:760px){.wall-constellation{top:188px;width:92%}.floor-constellation{top:110px;width:92%}}
+@media(max-width:760px){.constellation-stage{width:90vw}.wall-constellation{top:68%}.floor-constellation{top:56%}}
 .countdown-overlay{position:absolute;z-index:20;left:50%;top:55%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}.countdown-overlay small{font:700 11px ui-monospace,monospace;letter-spacing:.32em;color:#75dfff;text-shadow:0 0 16px #35cfff}.countdown-overlay strong{font:200 clamp(110px,14vw,190px)/.85 ui-monospace,monospace;color:#effcff;text-shadow:0 0 18px #fff,0 0 45px #36cfff,0 0 90px #247cff;animation:countdownPop 1s ease-out both}.floor-countdown{top:53%}.floor-countdown strong{font-size:clamp(120px,16vw,220px)}
 @keyframes countdownPop{0%{opacity:0;transform:scale(1.55)}20%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(.92)}100%{opacity:0;transform:scale(.72)}}
 @media(max-width:760px){.countdown-overlay{top:58%}.countdown-overlay strong,.floor-countdown strong{font-size:110px}.submit-button{padding:10px 12px;font-size:9px}}
