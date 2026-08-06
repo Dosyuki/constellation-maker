@@ -16,3 +16,13 @@
 @keyframes pulse{50%{opacity:.48}}@keyframes lineFlow{to{stroke-dashoffset:-3.5}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes floatIn{from{opacity:0;transform:translate(-50%,-35%) scale(.7)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @media(max-width:760px){.prototype-label{display:none}.topbar{padding:0 16px}.wall-screen{height:430px;margin:14px 10px 0}.round-pill{top:26px;left:20px}.timer{top:22px;right:18px;width:92px;height:78px}.timer span{font-size:36px}.score-chip{right:20px;bottom:18px}.wall-center{top:112px;left:20px;right:20px;height:67px;gap:11px;text-align:left}.zodiac-symbol{font-size:36px}.wall-center h1{font-size:27px}.wall-constellation{left:4%;right:4%;top:168px;bottom:34px}.wall-star{width:28px;height:28px;font-size:15px}.wall-star.active{font-size:21px}.floor-zone{height:430px;margin:0}.floor-instruction{max-width:90%;white-space:normal;text-align:center}.star-node{width:46px;height:46px}.floor-legend{gap:10px}.floor-legend span:nth-child(2){display:none}.control-dock{height:84px;gap:13px;padding:0 12px}.control-dock>div:first-child{display:none}.progress-dots i{width:16px}.reset-button{display:none}.round-results{grid-template-columns:1fr}.summary-overlay{inset:10px 7%}.summary-overlay .round-results{max-height:150px;overflow:auto}.fast-toggle{font-size:0}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* Shared coordinate stage keeps the wall and floor constellations geometrically identical. */
+.constellation-stage{position:absolute;left:50%;transform:translateX(-50%);aspect-ratio:3.25/1;pointer-events:none}
+.wall-constellation{left:50%;right:auto;top:132px;bottom:auto;width:min(76%,1200px);aspect-ratio:3.25/1;transform:translateX(-50%)}
+.floor-constellation{z-index:3;top:92px;width:min(84%,1500px)}
+.floor-constellation .star-node{pointer-events:auto}
+.auto-reset{display:inline-block;border:1px solid #4c7a9680;background:#081b2a;padding:9px 16px;color:#8db7cd;font-size:11px}
+@keyframes hintFlash{0%,100%{opacity:0}22%,72%{opacity:1}}
+.phase-hint .wall-star.answer,.phase-hint .star-node.answer,.phase-hint .wall-line.visible,.phase-hint .line.visible{animation:hintFlash 2s ease-in-out both}
+@media(max-width:760px){.wall-constellation{top:188px;width:92%}.floor-constellation{top:110px;width:92%}}
