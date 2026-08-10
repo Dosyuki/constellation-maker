@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ZODIAC } from "./constellations";
+import { ZODIAC, ZODIAC_SIMPLIFIED } from "./constellations";
 
 type Phase = "idle" | "hint" | "countdown" | "play" | "reveal" | "score" | "summary";
 type Point = { id: string; x: number; y: number };
@@ -21,14 +21,15 @@ function ConstellationMap({mode,current,nodes,targetIds,selected,phase,answer,as
 }
 
 export default function Home(){
- const [phase,setPhase]=useState<Phase>("idle"),[rounds,setRounds]=useState<Constellation[]>([]),[roundIndex,setRoundIndex]=useState(0),[timeLeft,setTimeLeft]=useState(40),[countdown,setCountdown]=useState(3),[selected,setSelected]=useState<Set<string>>(new Set()),[results,setResults]=useState<RoundResult[]>([]),[fastMode,setFastMode]=useState(false),[resetIn,setResetIn]=useState(12),[roundDecoys,setRoundDecoys]=useState<Point[]>([]);
- const timerRef=useRef<ReturnType<typeof setInterval>|null>(null),current=rounds[roundIndex]??ZODIAC[2];
+ const [phase,setPhase]=useState<Phase>("idle"),[rounds,setRounds]=useState<Constellation[]>([]),[roundIndex,setRoundIndex]=useState(0),[timeLeft,setTimeLeft]=useState(40),[countdown,setCountdown]=useState(3),[selected,setSelected]=useState<Set<string>>(new Set()),[results,setResults]=useState<RoundResult[]>([]),[fastMode,setFastMode]=useState(false),[simplified,setSimplified]=useState(true),[resetIn,setResetIn]=useState(12),[roundDecoys,setRoundDecoys]=useState<Point[]>([]);
+ const catalog=simplified?ZODIAC_SIMPLIFIED:ZODIAC;
+ const timerRef=useRef<ReturnType<typeof setInterval>|null>(null),current=rounds[roundIndex]??catalog[2];
  const total=results.reduce((s,r)=>s+r.score,0),maxTotal=results.reduce((s,r)=>s+r.max,0),sessionMax=rounds.reduce((s,r)=>s+r.points.length,0);
  const nodes=useMemo(()=>[...current.points,...roundDecoys],[current,roundDecoys]);
  const targetIds=useMemo(()=>new Set(current.points.map(p=>p.id)),[current]);
  const clearTimer=()=>{if(timerRef.current){clearInterval(timerRef.current);timerRef.current=null}};
- const startHint=useCallback((index:number,target?:Constellation)=>{clearTimer();setRoundIndex(index);const map=target??rounds[index]??ZODIAC[2],decoyCount=9+Math.floor(Math.random()*4);setRoundDecoys(makeDecoys(map,decoyCount));setSelected(new Set());setPhase("hint");window.setTimeout(()=>{setCountdown(3);setPhase("countdown")},2000)},[rounds]);
- const startGame=()=>{const picked=shuffle(ZODIAC).slice(0,5);setRounds(picked);setResults([]);setRoundIndex(0);setSelected(new Set());window.setTimeout(()=>startHint(0,picked[0]),0)};
+ const startHint=useCallback((index:number,target?:Constellation)=>{clearTimer();setRoundIndex(index);const map=target??rounds[index]??catalog[2],decoyCount=9+Math.floor(Math.random()*4);setRoundDecoys(makeDecoys(map,decoyCount));setSelected(new Set());setPhase("hint");window.setTimeout(()=>{setCountdown(3);setPhase("countdown")},2000)},[rounds,catalog]);
+ const startGame=()=>{const picked=shuffle(catalog).slice(0,5);setRounds(picked);setResults([]);setRoundIndex(0);setSelected(new Set());window.setTimeout(()=>startHint(0,picked[0]),0)};
  const evaluate=useCallback(()=>{clearTimer();const score=current.points.filter(p=>selected.has(p.id)).length;const result={id:current.id,th:current.th,en:current.en,score,max:current.points.length};setResults(prev=>[...prev,result]);setPhase("reveal");window.setTimeout(()=>setPhase("score"),3000);window.setTimeout(()=>roundIndex>=4?setPhase("summary"):startHint(roundIndex+1,rounds[roundIndex+1]),5000)},[current,selected,roundIndex,startHint,rounds]);
  useEffect(()=>{if(phase!=="countdown")return;const id=window.setInterval(()=>setCountdown(v=>{if(v<=1){window.clearInterval(id);setTimeLeft(fastMode?10:40);setPhase("play");return 0}return v-1}),1000);return()=>window.clearInterval(id)},[phase,fastMode]);
  useEffect(()=>{if(phase!=="play")return;timerRef.current=setInterval(()=>setTimeLeft(v=>{if(v<=1){clearTimer();window.setTimeout(evaluate,0);return 0}return v-1}),1000);return clearTimer},[phase,evaluate]);
@@ -38,7 +39,7 @@ export default function Home(){
  const assistLines=phase==="play"&&timeLeft<=10,assistStars=phase==="play"&&timeLeft<=5,correctSelected=current.points.filter(p=>selected.has(p.id)).length,completion=current.points.length?Math.round(correctSelected/current.points.length*100):0;
  const status=phase==="idle"?"พร้อมเริ่มภารกิจ":phase==="hint"?"จดจำรูปกลุ่มดาว":phase==="countdown"?"เตรียมเข้าประจำตำแหน่ง":phase==="play"?"เลือกดาวที่ถูกต้อง":phase==="reveal"?"เฉลยคำตอบ":phase==="score"?"คะแนนรอบนี้":"สรุปภารกิจ";
  return <main className="app-shell"><div className="ambient ambient-a"/><div className="ambient ambient-b"/>
-  <header className="topbar"><div className="brand"><span className="brand-mark">✦</span><span>CONSTELLATION MAKER</span></div><div className="prototype-label">WEB PROTOTYPE · INPUT SIMULATION</div><label className="fast-toggle"><input type="checkbox" checked={fastMode} onChange={e=>setFastMode(e.target.checked)} disabled={phase!=="idle"&&phase!=="summary"}/><span/>โหมดทดสอบ 10 วิ</label></header>
+  <header className="topbar"><div className="brand"><span className="brand-mark">✦</span><span>CONSTELLATION MAKER</span></div><div className="prototype-label">WEB PROTOTYPE · INPUT SIMULATION</div><div className="mode-controls"><label className="fast-toggle map-toggle"><input type="checkbox" checked={simplified} onChange={e=>setSimplified(e.target.checked)} disabled={phase!=="idle"}/><span/><b>{simplified?"SIMPLIFIED":"REAL"}</b><small>{current.points.length} PTS</small></label><label className="fast-toggle"><input type="checkbox" checked={fastMode} onChange={e=>setFastMode(e.target.checked)} disabled={phase!=="idle"&&phase!=="summary"}/><span/>โหมดทดสอบ 10 วิ</label></div></header>
   <section className={`wall-screen phase-${phase}`} aria-label="จอโค้งบนกำแพงสำหรับแสดงข้อมูล"><div className="screen-grid"/><div className="round-pill">ROUND {Math.min(roundIndex+1,5)} / 5</div><div className="wall-center"><div className="zodiac-symbol">{phase==="idle"?"✦":current.symbol}</div><div><p className="eyebrow">{status}</p><h1>{phase==="idle"?"นักสร้างกลุ่มดาว":current.th}</h1><p className="english-name">{phase==="idle"?"CONSTELLATION MAKER":current.en}</p></div></div>
   {phase!=="idle"&&phase!=="summary"&&<ConstellationMap mode="wall" current={current} nodes={nodes} targetIds={targetIds} selected={selected} phase={phase} answer={answer} assistLines={assistLines} assistStars={assistStars} onToggle={toggle}/>}
   <div className={`timer ${timeLeft<=10&&phase==="play"?"urgent":""}`}><span>{phase==="play"?String(timeLeft).padStart(2,"0"):"—"}</span><small>{phase==="play"?"SECONDS":"TIMER"}</small></div>{phase==="countdown"&&<div className="countdown-overlay wall-countdown"><small>GET READY</small><strong key={countdown}>{countdown}</strong></div>}<div className="score-chip"><small>SCORE</small><strong>{total}</strong><span>/{sessionMax||"—"}</span></div>

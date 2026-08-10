@@ -45,3 +45,5 @@
 @keyframes assistFlow{to{stroke-dashoffset:-3.8}}
 @keyframes targetPulse{50%{opacity:.42;transform:scale(1.16);filter:drop-shadow(0 0 10px #b36cff)}}
 @media(max-width:760px){.completion-chip{top:62px;right:4%}.constellation-stage.dense .star-node{width:34px;height:34px}.constellation-stage.dense .star-core{font-size:14px}}
+.mode-controls{display:flex;align-items:center;gap:20px}.map-toggle{padding:7px 10px;border:1px solid #2c4961;border-radius:8px;background:#071523}.map-toggle b{font:700 9px ui-monospace,monospace;letter-spacing:.12em;color:#8feaff}.map-toggle small{font:600 7px ui-monospace,monospace;color:#57778e}.map-toggle:has(input:disabled){opacity:.45;cursor:not-allowed}
+@media(max-width:760px){.mode-controls{gap:8px}.map-toggle{padding:6px}.map-toggle b{font-size:8px}.map-toggle small{display:none}.mode-controls>.fast-toggle:last-child{display:none}}
