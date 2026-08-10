@@ -11,8 +11,7 @@ const UI_STEPS = [
   { key:"play", no:"03", title:"Gameplay", th:"ร่วมกันสร้างราศีสิงห์", note:"แสดงเฉพาะดาวที่ทีมเหยียบสำเร็จและเส้นที่ค้นพบแล้ว สถานะ 4/9 ช่วยให้รู้ความคืบหน้าโดยไม่เปิดเผยคำตอบที่เหลือ", timer:"18", score:"4/9" },
   { key:"assist", no:"04", title:"Hint Assist", th:"ยังขาดดาวเป้าหมายอีก 2 จุด", note:"ช่วง 10 วินาทีท้าย ระบบค่อย ๆ เติมเส้นประบอกทิศทาง แล้วให้วงแสงรอบเป้าหมายเต้นใน 5 วินาทีสุดท้าย โดยดาวหลอกยังคงหน้าตาเป็นกลาง", timer:"05", score:"7/9" },
   { key:"reveal", no:"05", title:"Answer Reveal", th:"ดูสิ่งที่ทีมทำได้ในรอบนี้", note:"เขียวคือดาวที่เลือกถูก ชมพูคือดาวหลอกที่เหยียบ และวงเส้นประคือดาวเป้าหมายที่พลาด พร้อมวาดรูปคำตอบจริงให้เทียบได้ทันที", timer:"+7", score:"78%" },
-  { key:"summary", no:"06", title:"Final Summary", th:"ภารกิจสำเร็จ — เห็นผลลัพธ์ใน 3 วินาที", note:"รวมคะแนน ความแม่นยำ และจำนวนรอบไว้ในภาพเดียว พร้อมใช้ราศีที่เพิ่งสร้างเป็นฉากรางวัลเพื่อเชื่อมความสำเร็จกับการเล่น", timer:"38", score:"84%" },
-  { key:"operator", no:"07", title:"Operator Dashboard", th:"ควบคุมและดูแลระบบจากจุดเดียว", note:"ผู้ดูแลเห็นสถานะ Wall Display, Sensor 22 จุด, latency และระดับ Hint Assist พร้อมปุ่มหยุดฉุกเฉินที่แยกจากคำสั่งทั่วไปอย่างชัดเจน", timer:"LIVE", score:"22/22" },
+  { key:"summary", no:"06", title:"Final Summary", th:"ภารกิจสำเร็จ — เห็นผลลัพธ์ใน 3 วินาที", note:"สรุปเฉพาะคะแนนรวมและความแม่นยำที่มีความหมายกับผู้เล่น พร้อมใช้ราศีที่เพิ่งสร้างเป็นฉากรางวัลเพื่อเชื่อมความสำเร็จกับการเล่น", timer:"38", score:"84%" },
 ] as const;
 
 const FLOW_STEPS = [
@@ -61,12 +60,11 @@ function RealConstellation({kind}:{kind:string}){
 }
 
 function MockScreen({step}:{step:(typeof UI_STEPS)[number]}){
-  const isOperator=step.key==="operator";
-  return <div className={`mock-screen mock-${step.key}`}><div className="mock-grid"/><div className="mock-screen-top"><span>ROUND {step.key==="summary"?"5":"2"} / 5</span><small>{isOperator?"SYSTEM ONLINE":"WALL DISPLAY"}</small></div>
-    {isOperator?<div className="operator-preview"><aside><b>OPERATOR</b><span className="selected">● ภาพรวม Session</span><span>◌ ควบคุมรอบ</span><span>◌ Sensor & Calibration</span><span>◌ ชุดโจทย์</span><span className="emergency">หยุดฉุกเฉิน</span></aside><section><div className="operator-heading"><div><small>LIVE · ROUND 2 / 5</small><h3>ภาพรวม Session</h3></div><b>42 ms</b></div><div className="operator-cards"><article><small>WALL DISPLAY</small><strong>สร้างราศีสิงห์</strong><span>18 SEC</span></article><article><small>SENSORS</small><strong>22 / 22</strong><span>ONLINE</span></article><article><small>ROUND CONTROL</small><strong>Hint Assist</strong><span>BOTH</span></article></div></section></div>:<>
+  return <div className={`mock-screen mock-${step.key}`}><div className="mock-grid"/><div className="mock-screen-top"><span>ROUND {step.key==="summary"?"5":"2"} / 5</span><small>WALL DISPLAY</small></div>
+    <>
       <div className="mock-screen-center"><span className="mock-symbol">{step.key==="summary"?"✦":"♌"}</span><p>{step.title.toUpperCase()}</p><h3>{step.th}</h3><small>CONSTELLATION MAKER · LEO</small></div><RealConstellation kind={step.key}/><div className="mock-metric"><strong>{step.timer}</strong><small>{step.key==="summary"?"TOTAL SCORE":step.key==="reveal"?"ROUND SCORE":"TIME LEFT"}</small></div><div className="mock-score"><small>{step.key==="summary"?"ACCURACY":step.key==="attract"?"CONSTELLATION":"SCORE"}</small><strong>{step.score}</strong></div>
-      {step.key==="attract"&&<button className="mock-cta"><i/>ยืนบนดาวเพื่อเริ่มภารกิจ <span>→</span></button>}{step.key==="reveal"&&<div className="reveal-banner"><b>✓ ถูก 7 จุด</b><span>× ดาวหลอก 1 จุด</span><em>◌ พลาด 2 จุด</em></div>}{step.key==="summary"&&<div className="summary-stats"><span>38 / 45<small>คะแนนรวม</small></span><span>84%<small>ความแม่นยำ</small></span><span>5 / 5<small>รอบที่เล่น</small></span></div>}
-    </>}
+      {step.key==="attract"&&<button className="mock-cta"><i/>ยืนบนดาวเพื่อเริ่มภารกิจ <span>→</span></button>}{step.key==="reveal"&&<div className="reveal-banner"><b>✓ ถูก 7 จุด</b><span>× ดาวหลอก 1 จุด</span><em>◌ พลาด 2 จุด</em></div>}{step.key==="summary"&&<div className="summary-stats"><span>38 / 45<small>คะแนนรวม</small></span><span>84%<small>ความแม่นยำ</small></span></div>}
+    </>
   </div>
 }
 
