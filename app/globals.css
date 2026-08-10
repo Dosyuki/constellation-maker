@@ -78,4 +78,28 @@
 /* 15-second attract carousel, compact decoy feedback, and visible -1 scoring. */
 .phase-idle .wall-center,.phase-idle .wall-constellation,.phase-idle .score-chip,.phase-idle .wall-cta p,.floor-zone.phase-idle .floor-constellation,.floor-zone.phase-idle .floor-instruction{transition:opacity .45s ease,filter .45s ease}.attract-fade-out .wall-center,.attract-fade-out .wall-constellation,.attract-fade-out .score-chip,.attract-fade-out .wall-cta p,.floor-zone.attract-fade-out .floor-constellation,.floor-zone.attract-fade-out .floor-instruction{opacity:0;filter:blur(8px)}.attract-fade-in .wall-center,.attract-fade-in .wall-constellation,.attract-fade-in .score-chip,.attract-fade-in .wall-cta p,.floor-zone.attract-fade-in .floor-constellation,.floor-zone.attract-fade-in .floor-instruction{animation:attractSwapIn .7s ease both}.star-node.penalty .star-core{color:#ff7f8e;font-size:29px;text-shadow:0 0 8px #fff,0 0 22px #ff4565,0 0 42px #c71143}.star-node.penalty .sensor-ring{inset:-5px;border:2px solid #ff607a;box-shadow:0 0 0 8px #ff315015,0 0 30px #ff315077;animation:penaltyPulse .8s ease-in-out infinite}.star-node.penalty .node-label{color:#ff8d9d;font-size:10px}.penalty-chip{position:absolute;z-index:10;right:5%;top:62px;display:flex;align-items:baseline;gap:7px;padding:8px 12px;border:1px solid #ff5e7788;border-radius:18px;background:#35101dcc;color:#ff8da0;font:700 15px ui-monospace,monospace;box-shadow:0 0 25px #ff315033;animation:penaltyPop .45s ease-out both}.penalty-chip small{font-size:8px;letter-spacing:.12em;color:#c97888}
 @keyframes attractSwapIn{from{opacity:0;filter:blur(8px) brightness(1.7)}to{opacity:1;filter:blur(0) brightness(1)}}@keyframes penaltyPulse{50%{scale:1.12;opacity:.72}}@keyframes penaltyPop{from{opacity:0;transform:translateY(-8px) scale(1.25)}to{opacity:1;transform:none}}
+
+/* Keep every pulsing star anchored to its real geometric center. */
+.real-star,
+.phase-idle .wall-constellation .star-node{
+  translate:none;
+  scale:none;
+  transform:translate(-50%,-50%);
+  transform-origin:50% 50%;
+}
+
+@keyframes starBreathe{
+  0%,100%{opacity:.45;transform:translate(-50%,-50%) scale(.85)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.14)}
+}
+
+@keyframes assistTarget{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-50%,-50%) scale(1.16);box-shadow:0 0 0 9px #aa75ff12,0 0 20px #b07aff66}
+}
+
+@keyframes idleStarBreathe{
+  0%,100%{opacity:.48;transform:translate(-50%,-50%) scale(.88)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.13);filter:brightness(1.35)}
+}
 @media(max-width:760px){.penalty-chip{right:4%;top:102px}.floor-zone.phase-play .floor-instruction{font-size:9px}}
