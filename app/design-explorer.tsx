@@ -1,23 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { ZODIAC } from "./constellations";
 
 export type SiteView = "game" | "mockup" | "flow";
 
 const UI_STEPS = [
-  { key:"attract", no:"01", title:"Attract Mode", th:"เชิญชวนให้เริ่มภารกิจ", note:"จอผนังสื่อสารได้จากระยะไกล พร้อมคำเชิญที่เข้าใจได้โดยไม่ต้องใช้ Controller", timer:"—", score:"0/—" },
-  { key:"setup", no:"02", title:"Player Setup", th:"ตรวจจำนวนผู้เล่น", note:"ระบบยืนยันจำนวนผู้เล่นและแจ้งอย่างสุภาพเมื่อยังต้องการผู้เล่นเพิ่ม", timer:"READY", score:"4 PLAYERS" },
-  { key:"memory", no:"03", title:"Memory Hint", th:"จดจำราศีเมถุน", note:"แสดงรูปร่างคำตอบเพียง 2 วินาที ก่อนซ่อนและเปิดรับการเคลื่อนไหว", timer:"02", score:"0/45" },
-  { key:"play", no:"04", title:"Gameplay", th:"สร้างราศีสิงห์", note:"เวลาเป็นข้อมูลสำคัญที่สุด ตามด้วยคำสั่ง จำนวนเป้าหมายที่พบ และคะแนนสะสม", timer:"18", score:"12/45" },
-  { key:"assist", no:"05", title:"Hint Assist", th:"ยังขาดอีก 2 ดาว", note:"เส้นประและวงแสงช่วยบอกทิศทาง โดยไม่ทำให้ดาวหลอกดูผิดอย่างชัดเจน", timer:"05", score:"3/5" },
-  { key:"reveal", no:"06", title:"Answer Reveal", th:"เกือบสมบูรณ์แล้ว!", note:"ใช้สี ไอคอน รูปทรง และข้อความร่วมกัน เพื่อให้ผู้เล่นทุกคนเข้าใจผลลัพธ์", timer:"+4", score:"80%" },
-  { key:"summary", no:"07", title:"Final Summary", th:"ภารกิจสำเร็จ", note:"สรุปคะแนน ความแม่นยำ และรอบที่ทำได้ดีที่สุด ก่อนเริ่ม Session ใหม่", timer:"38", score:"84%" },
-  { key:"operator", no:"08", title:"Operator Dashboard", th:"ควบคุมและดูแลระบบ", note:"ติดตามสองจอ Sensor, latency, Hint Assist, Error log และ Emergency Stop จากที่เดียว", timer:"LIVE", score:"22/22" },
+  { key:"attract", no:"01", title:"Attract Mode", th:"มองเห็นภารกิจได้ตั้งแต่ระยะไกล", note:"ราศีสิงห์จริงจากชุดข้อมูลในเกมค่อย ๆ ลอยและวาดเส้นขึ้นมา พร้อมแสงชีพจรที่ปุ่มเริ่ม เพื่อดึงสายตาโดยไม่รบกวนพื้นที่จัดแสดง", timer:"∞", score:"LEO" },
+  { key:"memory", no:"02", title:"Memory Hint", th:"จดจำราศีสิงห์ใน 2 วินาที", note:"เผยดาวเป้าหมายและเส้นเชื่อมครบทั้งรูปชั่วคราว ผู้เล่นจึงรู้ว่าต้องจำทั้งตำแหน่งและความสัมพันธ์ของดาวก่อนภาพค่อย ๆ หายไป", timer:"02", score:"9 STARS" },
+  { key:"play", no:"03", title:"Gameplay", th:"ร่วมกันสร้างราศีสิงห์", note:"แสดงเฉพาะดาวที่ทีมเหยียบสำเร็จและเส้นที่ค้นพบแล้ว สถานะ 4/9 ช่วยให้รู้ความคืบหน้าโดยไม่เปิดเผยคำตอบที่เหลือ", timer:"18", score:"4/9" },
+  { key:"assist", no:"04", title:"Hint Assist", th:"ยังขาดดาวเป้าหมายอีก 2 จุด", note:"ช่วง 10 วินาทีท้าย ระบบค่อย ๆ เติมเส้นประบอกทิศทาง แล้วให้วงแสงรอบเป้าหมายเต้นใน 5 วินาทีสุดท้าย โดยดาวหลอกยังคงหน้าตาเป็นกลาง", timer:"05", score:"7/9" },
+  { key:"reveal", no:"05", title:"Answer Reveal", th:"ดูสิ่งที่ทีมทำได้ในรอบนี้", note:"เขียวคือดาวที่เลือกถูก ชมพูคือดาวหลอกที่เหยียบ และวงเส้นประคือดาวเป้าหมายที่พลาด พร้อมวาดรูปคำตอบจริงให้เทียบได้ทันที", timer:"+7", score:"78%" },
+  { key:"summary", no:"06", title:"Final Summary", th:"ภารกิจสำเร็จ — เห็นผลลัพธ์ใน 3 วินาที", note:"รวมคะแนน ความแม่นยำ และจำนวนรอบไว้ในภาพเดียว พร้อมใช้ราศีที่เพิ่งสร้างเป็นฉากรางวัลเพื่อเชื่อมความสำเร็จกับการเล่น", timer:"38", score:"84%" },
+  { key:"operator", no:"07", title:"Operator Dashboard", th:"ควบคุมและดูแลระบบจากจุดเดียว", note:"ผู้ดูแลเห็นสถานะ Wall Display, Sensor 22 จุด, latency และระดับ Hint Assist พร้อมปุ่มหยุดฉุกเฉินที่แยกจากคำสั่งทั่วไปอย่างชัดเจน", timer:"LIVE", score:"22/22" },
 ] as const;
 
 const FLOW_STEPS = [
-  { title:"Attract Mode", duration:"รอผู้เล่น", purpose:"ดึงดูดความสนใจและอธิบายวิธีเล่นในประโยคเดียว", player:"เห็นชื่อเกมและคำเชิญให้ยืนบนดาว", system:"วนภาพเคลื่อนไหวแบบ Low Motion และรอ input เริ่มต้น" },
-  { title:"Player Setup", duration:"ตามสถานการณ์", purpose:"ยืนยันจำนวนผู้เล่นให้เพียงพอกับ Target Nodes", player:"เห็นจำนวนผู้เล่นและสถานะความพร้อม", system:"อ่าน Sensor และแจ้ง Operator หากต้องเชิญผู้เล่นเพิ่ม" },
+  { title:"Attract Mode", duration:"รอเริ่มเล่น", purpose:"ดึงดูดสายตาจากระยะไกลและสื่อวิธีเริ่มในประโยคเดียว", player:"เห็นราศีสิงห์ค่อย ๆ ลอย เส้นแสงวิ่ง และคำเชิญให้ยืนบนดาว", system:"วน motion 8 วินาที อ่าน input แรก แล้วส่งต่อไปเลือกโจทย์ทันที" },
   { title:"Round Selection", duration:"ทันที", purpose:"เลือกโจทย์ใหม่จาก 12 ราศีโดยไม่ซ้ำใน Session", player:"ไม่เห็นขั้นตอนสุ่ม", system:"บันทึก random seed, targets, edges และ decoys" },
   { title:"Memory Hint", duration:"2 วินาที", purpose:"ให้ผู้เล่นจดจำรูปร่างและเส้นเชื่อม", player:"เห็นชื่อราศีและรูปคำตอบชั่วคราว", system:"Fade in 0.4s · Hold 1.2s · Fade out 0.4s" },
   { title:"Ready Countdown", duration:"3 วินาที", purpose:"ให้ทุกคนมีเวลาเข้าตำแหน่งอย่างปลอดภัย", player:"เห็น 3 · 2 · 1 พร้อม visual/audio cue", system:"อ่าน Sensor ได้ แต่ยังไม่นับคะแนน" },
@@ -36,17 +35,37 @@ function BrandNav({view,onView}:{view:SiteView;onView:(view:SiteView)=>void}){
   </header>
 }
 
-function StarField({kind}:{kind:string}){
-  const stars=kind==="operator"?8:13;
-  return <div className={`demo-starfield state-${kind}`} aria-hidden="true">{Array.from({length:stars},(_,i)=><span key={i} className={(i<5&&["play","assist","reveal"].includes(kind))?"lit":""} style={{left:`${12+(i*19)%76}%`,top:`${18+(i*31)%64}%`,animationDelay:`${i*.08}s`}}>✦</span>)}{kind==="memory"&&<div className="memory-lines"/>}</div>
+const LEO = ZODIAC.find((item)=>item.id==="leo")!;
+const LEO_POINTS = LEO.points.map((point)=>({...point,x:8+(point.x-13)*.92,y:10+(point.y-21.15)*1.85}));
+const LEO_POINT_MAP = new Map(LEO_POINTS.map((point)=>[point.id,point]));
+
+function RealConstellation({kind}:{kind:string}){
+  const revealed = kind==="memory" || kind==="attract" || kind==="reveal" || kind==="summary";
+  return <div className={`real-constellation state-${kind}`} aria-label="ตัวอย่างราศีสิงห์จากข้อมูลจริงในเกม">
+    <div className="constellation-name"><b>♌ LEO</b><small>REAL GAME DATA · 9 STARS</small></div>
+    <div className="real-lines" aria-hidden="true">{LEO.edges.map(([from,to],i)=>{
+      const a=LEO_POINT_MAP.get(from),b=LEO_POINT_MAP.get(to); if(!a||!b)return null;
+      const dx=b.x-a.x,dy=(b.y-a.y)/2.3,length=Math.hypot(dx,dy),angle=Math.atan2(dy,dx)*180/Math.PI;
+      const discovered=revealed || (kind==="play"&&i<4) || (kind==="assist"&&i<7);
+      return <i key={`${from}-${to}`} className={discovered?"discovered":"hint-line"} style={{left:`${a.x}%`,top:`${a.y}%`,width:`${length}%`,transform:`rotate(${angle}deg)`,animationDelay:`${i*.12}s`}}/>;
+    })}</div>
+    {LEO_POINTS.map((point,i)=>{
+      const active=revealed || (kind==="play"&&i<4) || (kind==="assist"&&i<7);
+      const missed=kind==="reveal"&&i>=7;
+      return <span key={point.id} className={`real-star ${active?"active":""} ${missed?"missed":""}`} style={{left:`${point.x}%`,top:`${point.y}%`,animationDelay:`${i*.14}s`}}><i>✦</i><small>{String(i+1).padStart(2,"0")}</small></span>;
+    })}
+    {kind==="reveal"&&<span className="decoy-star" aria-label="ดาวหลอก">×</span>}
+    {kind==="play"&&<div className="state-explainer"><b>4 / 9</b><span>ดาวเป้าหมายที่ค้นพบ</span></div>}
+    {kind==="assist"&&<div className="state-explainer"><b>7 / 9</b><span>เส้นประ = ทิศทางใบ้ · วงแสง = เป้าหมาย</span></div>}
+  </div>
 }
 
 function MockScreen({step}:{step:(typeof UI_STEPS)[number]}){
   const isOperator=step.key==="operator";
   return <div className={`mock-screen mock-${step.key}`}><div className="mock-grid"/><div className="mock-screen-top"><span>ROUND {step.key==="summary"?"5":"2"} / 5</span><small>{isOperator?"SYSTEM ONLINE":"WALL DISPLAY"}</small></div>
     {isOperator?<div className="operator-preview"><aside><b>OPERATOR</b><span className="selected">● ภาพรวม Session</span><span>◌ ควบคุมรอบ</span><span>◌ Sensor & Calibration</span><span>◌ ชุดโจทย์</span><span className="emergency">หยุดฉุกเฉิน</span></aside><section><div className="operator-heading"><div><small>LIVE · ROUND 2 / 5</small><h3>ภาพรวม Session</h3></div><b>42 ms</b></div><div className="operator-cards"><article><small>WALL DISPLAY</small><strong>สร้างราศีสิงห์</strong><span>18 SEC</span></article><article><small>SENSORS</small><strong>22 / 22</strong><span>ONLINE</span></article><article><small>ROUND CONTROL</small><strong>Hint Assist</strong><span>BOTH</span></article></div></section></div>:<>
-      <div className="mock-screen-center"><span className="mock-symbol">{step.key==="summary"?"✦":step.key==="memory"?"♊":"♌"}</span><p>{step.title.toUpperCase()}</p><h3>{step.th}</h3><small>{step.key==="memory"?"GEMINI":"CONSTELLATION MAKER"}</small></div><StarField kind={step.key}/><div className="mock-metric"><strong>{step.timer}</strong><small>{step.key==="summary"?"TOTAL SCORE":step.key==="reveal"?"ROUND SCORE":"TIME LEFT"}</small></div><div className="mock-score"><small>{step.key==="summary"?"ACCURACY":"SCORE"}</small><strong>{step.score}</strong></div>
-      {step.key==="attract"&&<button className="mock-cta">ยืนบนดาวเพื่อเริ่มภารกิจ →</button>}{step.key==="reveal"&&<div className="reveal-banner">✓ เลือกถูก 4 จุด <span>× ดาวหลอก 1 จุด</span></div>}{step.key==="summary"&&<div className="summary-stats"><span>38 / 45<small>คะแนนรวม</small></span><span>84%<small>ความแม่นยำ</small></span><span>5 / 5<small>รอบที่ดีที่สุด</small></span></div>}
+      <div className="mock-screen-center"><span className="mock-symbol">{step.key==="summary"?"✦":"♌"}</span><p>{step.title.toUpperCase()}</p><h3>{step.th}</h3><small>CONSTELLATION MAKER · LEO</small></div><RealConstellation kind={step.key}/><div className="mock-metric"><strong>{step.timer}</strong><small>{step.key==="summary"?"TOTAL SCORE":step.key==="reveal"?"ROUND SCORE":"TIME LEFT"}</small></div><div className="mock-score"><small>{step.key==="summary"?"ACCURACY":step.key==="attract"?"CONSTELLATION":"SCORE"}</small><strong>{step.score}</strong></div>
+      {step.key==="attract"&&<button className="mock-cta"><i/>ยืนบนดาวเพื่อเริ่มภารกิจ <span>→</span></button>}{step.key==="reveal"&&<div className="reveal-banner"><b>✓ ถูก 7 จุด</b><span>× ดาวหลอก 1 จุด</span><em>◌ พลาด 2 จุด</em></div>}{step.key==="summary"&&<div className="summary-stats"><span>38 / 45<small>คะแนนรวม</small></span><span>84%<small>ความแม่นยำ</small></span><span>5 / 5<small>รอบที่เล่น</small></span></div>}
     </>}
   </div>
 }
