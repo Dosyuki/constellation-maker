@@ -108,3 +108,171 @@
 .phase-question .wall-center{opacity:0;pointer-events:none}.phase-question.wall-screen{background:radial-gradient(circle at 50% 48%,#173d6699,transparent 43%),linear-gradient(180deg,#071523,#050d1a)}.phase-question .wall-constellation{z-index:3;top:50%;width:min(78vw,1180px);opacity:.27;filter:blur(.7px) brightness(1.2);animation:questionBackdropIn .8s ease both,questionBackdropDrift 5s ease-in-out both}.phase-question .wall-constellation .star-node{animation:questionStarPulse 2.5s ease-in-out infinite}.phase-question .line.visible{opacity:.5;stroke-width:.32}.question-overlay{position:absolute;z-index:11;inset:50% auto auto 50%;width:min(560px,70%);transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;text-align:center;animation:questionIntroIn .65s cubic-bezier(.2,.8,.2,1) both}.question-overlay>small{font:700 9px ui-monospace,monospace;letter-spacing:.22em;color:#75dfff}.question-symbol{font-size:54px;line-height:1;margin:9px 0 3px;color:#c7f8ff;text-shadow:0 0 15px #fff,0 0 42px #4ee4ff,0 0 85px #3b65ff}.question-overlay p{margin:0;color:#80a6ba;font-size:11px}.question-overlay h2{margin:3px 0 0;font-size:clamp(36px,5vw,64px);font-weight:300;line-height:1;color:#f1fbff;text-shadow:0 5px 30px #001}.question-overlay>b{margin-top:5px;font:700 12px ui-monospace,monospace;letter-spacing:.3em;color:#8fcce2}.player-requirement{display:flex;align-items:center;gap:13px;margin-top:17px;padding:8px 17px;border:1px solid #64dfff77;background:#071928d9;box-shadow:0 0 32px #3bd5ff22}.player-requirement>strong{font:300 35px/1 ui-monospace,monospace;color:#aaf3ff}.player-requirement>span{display:flex;flex-direction:column;text-align:left;font-size:11px;color:#d9f5ff}.player-requirement small{font:700 7px ui-monospace,monospace;letter-spacing:.12em;color:#668ca2;margin-top:2px}.question-progress{width:min(330px,70%);height:2px;margin-top:17px;background:#17354b;overflow:hidden}.question-progress i{display:block;width:100%;height:100%;background:linear-gradient(90deg,#50e6ff,#8170ff);transform-origin:left;animation:questionProgress 5s linear both}.question-leaving .question-overlay{animation:questionIntroOut .7s ease forwards}.question-leaving.phase-question .wall-constellation,.floor-zone.question-leaving .floor-constellation{animation:questionBackdropOut .7s ease forwards}.floor-zone.phase-question .floor-constellation{opacity:.45;filter:brightness(1.15);animation:questionFloorIn .8s ease both}.floor-zone.phase-question .floor-instruction{border-color:#54dfff66;color:#a5eaff}.phase-question .timer{border-color:#53dcff88;box-shadow:inset 0 0 28px #2ed7ff25}.phase-question .timer span{color:#b9f4ff;text-shadow:0 0 18px #59dfff}
 @keyframes questionIntroIn{from{opacity:0;filter:blur(12px);transform:translate(-50%,-46%) scale(.94)}to{opacity:1;filter:blur(0);transform:translate(-50%,-50%) scale(1)}}@keyframes questionIntroOut{to{opacity:0;filter:blur(12px);transform:translate(-50%,-54%) scale(1.04)}}@keyframes questionBackdropIn{from{opacity:0;filter:blur(12px) brightness(1.8)}to{opacity:.27;filter:blur(.7px) brightness(1.2)}}@keyframes questionBackdropDrift{0%{transform:translate(-51%,-48%) scale(.94)}100%{transform:translate(-49%,-52%) scale(1.03)}}@keyframes questionBackdropOut{to{opacity:0;filter:blur(14px);transform:translate(-50%,-54%) scale(1.08)}}@keyframes questionFloorIn{from{opacity:0;filter:blur(10px) brightness(1.8)}to{opacity:.45;filter:blur(0) brightness(1.15)}}@keyframes questionStarPulse{0%,100%{opacity:.55}50%{opacity:1;filter:brightness(1.45)}}@keyframes questionProgress{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 @media(max-width:760px){.question-overlay{width:76%;top:54%}.question-symbol{font-size:42px}.question-overlay h2{font-size:34px}.question-overlay>b{font-size:9px}.player-requirement{margin-top:11px}.phase-question .wall-constellation{top:57%;width:92vw}}
+
+/* ---- PRE-GAME LEARN MODE - drag-to-pan star explorer (app/star-explorer.tsx) ---- */
+.cta-buttons{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.wall-cta .cta-buttons button{min-width:250px}
+.wall-cta .cta-buttons .skip-cta{min-width:170px;border-color:#4b7d9a88;background:#0a1a28c4;box-shadow:none;animation:none;font-weight:600;color:#a8c6d8}
+.wall-cta .cta-buttons .skip-cta:hover{border-color:#76eaff;color:#e6faff}
+.wall-cta .cta-buttons .skip-cta span{margin-left:12px}
+
+.learn-shell{min-height:100vh;position:relative;overflow:hidden;background:radial-gradient(circle at 50% -18%,#173157 0,transparent 44%),linear-gradient(180deg,#050b18,#02050c)}
+.learn-topbar{display:flex;gap:18px}
+.learn-title{display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.1}
+.learn-title small{font:700 8px ui-monospace,monospace;letter-spacing:.2em;color:#5fbfe0}
+.learn-title b{font-size:13px;font-weight:600;color:#dcf2ff}
+.learn-actions{display:flex;align-items:center;gap:10px}
+.ghost-button{border:1px solid #47708b88;background:#0a1725b3;color:#a9c6d8;padding:9px 15px;font-size:11px;cursor:pointer;transition:.2s}
+.ghost-button:hover{border-color:#76eaff;color:#e8fbff}
+.go-button{display:inline-flex;align-items:center;gap:10px;border:1px solid #76eaff;background:linear-gradient(135deg,#0b7896,#234fc7);color:#f2fdff;padding:10px 20px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 10px 34px #092b6577;transition:.2s}
+.go-button:hover{transform:translateY(-2px);box-shadow:0 14px 40px #0b3f8f88}
+.go-button span{color:#a9efff}
+.go-button.wide,.ghost-button.wide{width:100%;justify-content:center;text-align:center}
+
+.learn-body{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:clamp(12px,1.6vw,22px);padding:clamp(12px,2vw,22px) clamp(12px,3vw,42px) 26px;align-items:start}
+.explorer-panel{display:flex;flex-direction:column;gap:12px;min-width:0}
+.explorer-head{display:flex;align-items:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap}
+.slide-count{font:300 26px/1 ui-monospace,monospace;color:#bdeeff}
+.slide-count i{font:700 10px ui-monospace,monospace;font-style:normal;color:#5c7d92;letter-spacing:.1em}
+.explorer-name{display:flex;align-items:center;gap:13px;min-width:0}
+.explorer-symbol{font-size:38px;line-height:1;color:#a5efff;text-shadow:0 0 25px #48cbff99}
+.explorer-name h2{margin:0;font-size:clamp(19px,2.4vw,27px);font-weight:400;letter-spacing:-.02em;color:#f0fbff}
+.explorer-name p{margin:3px 0 0;font:600 10px ui-monospace,monospace;letter-spacing:.16em;color:#8aa8bb}
+.explorer-toggles{display:flex;align-items:center;gap:16px;margin-left:auto;flex-wrap:wrap}
+.seg{display:flex;border:1px solid #3d5f79;background:#08131f}
+.seg button{border:0;background:transparent;color:#87a4b7;padding:8px 14px;font-size:11px;cursor:pointer;transition:.2s}
+.seg button.on{background:linear-gradient(135deg,#0d5d78,#17356f);color:#e9fbff;box-shadow:inset 0 0 20px #2ec4ff2e}
+
+.explorer-stage{position:relative;height:clamp(330px,54vh,600px);border:1px solid #4d80ab66;border-radius:14px;overflow:hidden;background:#03080f;box-shadow:inset 0 0 90px #0f2a4a66,0 24px 70px #0007;touch-action:none;cursor:grab}
+.explorer-stage[data-dragging="yes"]{cursor:grabbing}
+.explorer-svg{display:block;width:100%;height:100%;user-select:none}
+.sky-grid line{stroke:#5d94c7;opacity:.13}
+.figure-lines line{stroke:#5bd7ff;opacity:.62;filter:drop-shadow(0 0 3px #36bfff)}
+.sky-star .star-halo{fill:#63d6ff;opacity:.13}
+.sky-star .star-body{fill:#e9f7ff}
+.sky-star.warm .star-body{fill:#ffb583}
+.sky-star.warm .star-halo{fill:#ff9a5e;opacity:.17}
+.sky-star.alpha .star-halo{opacity:.24}
+.sky-star.picked .star-body{fill:#8ceaff}
+.sky-star .star-ring{fill:none;stroke:#7be7ff;opacity:.9}
+.sky-star .star-hit{fill:transparent;cursor:pointer}
+.sky-star .star-label{fill:#9dc3d8;font-family:ui-monospace,monospace;letter-spacing:.08em;pointer-events:none;paint-order:stroke;stroke:#03080f;stroke-width:.35;stroke-linejoin:round}
+.sky-star.alpha .star-label{fill:#b9ecff}
+.backdrop-layer circle{pointer-events:none}
+
+.stage-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:56px;display:grid;place-items:center;border:1px solid #4b7c9d66;background:#061422c9;color:#bfe7f8;font-size:26px;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:.2s}
+.stage-nav:hover{border-color:#76eaff;color:#eafcff;background:#0a2035e0}
+.stage-nav.prev{left:12px;border-radius:0 8px 8px 0}
+.stage-nav.next{right:12px;border-radius:8px 0 0 8px}
+.stage-hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:#8fb0c4;background:#05101dd9;border:1px solid #34546d88;padding:7px 14px;border-radius:20px;pointer-events:none;max-width:94%;overflow:hidden;text-overflow:ellipsis}
+.zoom-dock{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.zoom-dock button{width:34px;height:34px;display:grid;place-items:center;border:1px solid #4b7c9d77;background:#061422cc;color:#c7ebfa;font-size:16px;cursor:pointer;border-radius:8px;transition:.2s}
+.zoom-dock button:hover{border-color:#76eaff;background:#0b2438e0}
+.zoom-dock .fit{font-size:13px}
+.zoom-read{font:700 9px ui-monospace,monospace;letter-spacing:.1em;color:#7fa3b8;background:#05101dcc;border:1px solid #2f4d64;padding:4px 6px;border-radius:6px}
+.star-readout{position:absolute;left:12px;bottom:56px;max-width:min(300px,70%);padding:11px 14px;border:1px solid #5fd0ff66;background:#061625e8;border-radius:10px;box-shadow:0 0 34px #1fa0e033}
+.star-readout small{display:block;font:700 8px ui-monospace,monospace;letter-spacing:.18em;color:#6fa5bd}
+.star-readout strong{display:block;margin:3px 0 4px;font-size:15px;font-weight:600;color:#e9fbff}
+.star-readout span{font-size:10px;color:#8db3c7;line-height:1.5}
+
+.zodiac-rail{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px}
+.rail-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border:1px solid #2f4c63;background:#07121ec4;color:#87a4b7;cursor:pointer;transition:.2s;position:relative;min-width:0}
+.rail-item span{font-size:19px;line-height:1}
+.rail-item small{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.rail-item:hover{border-color:#5fbfe0aa;color:#d7f2ff}
+.rail-item.seen:after{content:"";position:absolute;top:5px;right:5px;width:4px;height:4px;border-radius:50%;background:#4bd48e;box-shadow:0 0 7px #4bd48e}
+.rail-item.on{border-color:#76eaff;background:linear-gradient(160deg,#0d4e6b,#112a58);color:#eafcff;box-shadow:0 0 24px #2eb6ff33}
+
+.learn-aside{display:flex;flex-direction:column;gap:12px;min-width:0}
+.learn-aside>div{border:1px solid #33536c88;background:#07131fc4;padding:14px 15px}
+.learn-progress{display:flex;flex-direction:column;gap:9px}
+.learn-progress strong{font:300 25px/1 ui-monospace,monospace;color:#cdf1ff}
+.learn-progress strong small{font:700 9px ui-monospace,monospace;letter-spacing:.12em;color:#6b8da2}
+.progress-bar{height:3px;background:#16324a;overflow:hidden}
+.progress-bar i{display:block;height:100%;background:linear-gradient(90deg,#50e6ff,#8170ff);transition:width .45s ease}
+.fact-card .fact-blurb{margin:6px 0 0;font-size:12.5px;line-height:1.72;color:#d3e9f5}
+.fact-look{margin-top:12px;padding-top:11px;border-top:1px dashed #35566f}
+.fact-look b{display:block;font:700 8px ui-monospace,monospace;letter-spacing:.18em;color:#67d6f8;margin-bottom:5px}
+.fact-look p{margin:0;font-size:11.5px;line-height:1.7;color:#a7c3d3}
+.fact-alpha{display:flex;flex-direction:column;gap:3px}
+.fact-alpha strong{font-size:17px;font-weight:600;color:#eafbff;letter-spacing:.01em}
+.fact-alpha .alpha-th{font-size:11px;color:#8fb2c5}
+.fact-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fact-stats>div{display:flex;flex-direction:column;gap:4px}
+.fact-stats strong{font:300 21px/1 ui-monospace,monospace;color:#cdf1ff}
+.aside-note{margin:0;padding:0 2px;font-size:10.5px;line-height:1.7;color:#7e9cb0}
+
+@media(max-width:1080px){
+ .learn-body{grid-template-columns:minmax(0,1fr)}
+ .explorer-toggles{margin-left:0;width:100%}
+ .learn-title{display:none}
+ .zodiac-rail{grid-template-columns:repeat(6,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .learn-topbar{height:auto;padding:11px clamp(12px,4vw,20px);flex-wrap:wrap;gap:10px}
+ .learn-actions{width:100%;justify-content:space-between}
+ .explorer-stage{height:clamp(280px,46vh,420px)}
+ .stage-hint{font-size:9px;padding:6px 10px}
+ .explorer-symbol{font-size:30px}
+ .slide-count{font-size:20px}
+ .zodiac-rail{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .rail-item small{display:none}
+ .wall-cta .cta-buttons button{min-width:210px}
+}
+
+/* Thai reads badly in the monospace label face used elsewhere in the UI. */
+.learn-aside .control-label,.fact-card .eyebrow,.fact-look b,.star-readout small{font-family:inherit;font-size:9.5px;font-weight:700;letter-spacing:.04em}
+.sky-grid line{stroke:#6ba0d0;opacity:.17}
+
+/* ---- 3D view: real stellar distances (app/sky-3d.tsx) ---- */
+.sky3d{cursor:grab}
+.sky3d[data-dragging="yes"]{cursor:grabbing}
+.sky3d .sight-rays line{stroke:#5fd0ff;opacity:.22;stroke-dasharray:.7 .7}
+.sky3d .figure-lines-3d line{stroke:#5bd7ff;opacity:.5;filter:drop-shadow(0 0 3px #36bfff)}
+.sky3d .earth-marker circle{fill:#6ff0c0}
+.sky3d .earth-marker .earth-halo{fill:#4ee6b0;opacity:.16}
+.sky3d .earth-marker text{fill:#8ff5cd;font-family:inherit;font-weight:700;paint-order:stroke;stroke:#02060c;stroke-width:.5;stroke-linejoin:round}
+.sky3d .star-ring{fill:none;stroke:#7be7ff;opacity:.9}
+.sky3d .star-hit{fill:transparent;cursor:pointer}
+.sky3d .star-label{fill:#a8cadd;font-family:ui-monospace,monospace;letter-spacing:.04em;pointer-events:none;paint-order:stroke;stroke:#02060c;stroke-width:.5;stroke-linejoin:round}
+.sky3d .sky-star.picked .star-label{fill:#d4f4ff}
+
+.sky3d-dock{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.sky3d-dock .swing{border:1px solid #76eaff;background:linear-gradient(135deg,#0b7896,#234fc7);color:#f2fdff;padding:9px 14px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 8px 26px #092b6577;transition:.2s}
+.sky3d-dock .swing:hover{transform:translateY(-1px)}
+.sky3d-dock .swing.back{border-color:#4b7d9a88;background:#0a1a28d9;color:#a8c6d8;box-shadow:none}
+.sky3d-dock .fast-toggle{background:#05101dcc;border:1px solid #2f4d64;padding:6px 9px;border-radius:6px;font-size:10px}
+
+.depth-readout{position:absolute;left:12px;top:12px;padding:10px 14px;border:1px solid #4b7c9d66;background:#05121fdb;border-radius:10px;max-width:min(320px,60%)}
+.depth-readout small{display:block;font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#6fa5bd}
+.depth-readout strong{display:block;margin:2px 0 3px;font:300 21px/1.1 ui-monospace,monospace;color:#cdf1ff}
+.depth-readout strong i{font:700 10px ui-monospace,monospace;font-style:normal;color:#7fa3b8}
+.depth-readout span{font-size:10.5px;line-height:1.6;color:#8fb6ca}
+.readout-dist{display:block;margin-top:4px;color:#7be7ff !important}
+
+@media(max-width:760px){
+ .sky3d-dock{right:8px;top:8px;gap:6px}
+ .sky3d-dock .swing{padding:7px 10px;font-size:10px}
+ .depth-readout{left:8px;top:8px;padding:8px 10px;max-width:52%}
+ .depth-readout strong{font-size:16px}
+ .depth-readout span{display:none}
+}
+
+.sky3d .earth-marker.edge circle{opacity:.85}
+.sky3d .earth-marker.edge .earth-halo{opacity:.28;animation:earthPing 1.9s ease-in-out infinite}
+@keyframes earthPing{0%,100%{opacity:.28}50%{opacity:.06}}
+
+@media(max-width:760px){
+ /* The game hides toggle labels on phones (.fast-toggle{font-size:0}); the learn
+    screen has three of them and needs its words back. */
+ .learn-shell .fast-toggle{font-size:10px;gap:7px}
+ .learn-shell .explorer-toggles{gap:11px;row-gap:9px}
+ .learn-shell .sky3d-dock .fast-toggle{font-size:9.5px}
+}
+.sky3d .earth-marker .earth-arrow{fill:#6ff0c0;opacity:.9}
+
+@media(max-width:760px){
+ /* On a phone the side arrows sit on top of the star labels, and the 12-sign rail
+    right below the stage is the better way to move between signs anyway. */
+ .learn-shell .stage-nav{display:none}
+}
