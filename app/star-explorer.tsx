@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ZODIAC, ZODIAC_SIMPLIFIED, type SkyConstellation } from "./constellations";
+import { HOROSCOPES } from "./horoscope-data";
 import Sky3D, { FAR_LY, formatLy } from "./sky-3d";
 import DEPTH from "./star-depth.json";
 
@@ -114,6 +115,7 @@ export default function StarExplorer({ onStart, onExit }: { onStart: () => void;
   const current = catalog[index];
   const full = ZODIAC[index];
   const fact = FACTS[current.id];
+  const horoscope = HOROSCOPES[current.id];
   const bounds = useMemo(() => boundsOf(current), [current]);
   const backdrop = useMemo(() => backdropStars(), []);
   const alphaStar = useMemo(() => full.points.find((p) => p.id === fact.alphaId) ?? full.points[0], [full, fact]);
@@ -465,6 +467,20 @@ export default function StarExplorer({ onStart, onExit }: { onStart: () => void;
             <p className="eyebrow">รู้จักกลุ่มดาวนี้</p>
             <p className="fact-blurb">{fact.blurb}</p>
             <div className="fact-look"><b>สังเกตยังไง</b><p>{fact.look}</p></div>
+          </div>
+
+          <div className="horoscope-card">
+            <div className="horoscope-heading">
+              <div><p className="eyebrow">ดวงประจำราศี</p><strong>อ่านดวงของ{current.th}</strong></div>
+              <span aria-hidden="true">✦</span>
+            </div>
+            <div className="horoscope-grid">
+              <article><b>การงาน / การเรียน</b><p>{horoscope.work}</p></article>
+              <article><b>การเงิน</b><p>{horoscope.money}</p></article>
+              <article><b>สุขภาพ</b><p>{horoscope.health}</p></article>
+              <article><b>ความรัก</b><p>{horoscope.love}</p></article>
+            </div>
+            <small className="horoscope-note">ข้อมูลอ้างอิงจากหน้า DATA · ใช้เพื่อการเรียนรู้และความบันเทิง</small>
           </div>
 
           <div className="fact-alpha">
