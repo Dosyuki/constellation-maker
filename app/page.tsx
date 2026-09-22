@@ -71,7 +71,7 @@ export default function Home(){
  const toggle=(id:string)=>{if(phase!=="play"||eventSeconds>0&&((activeEvent?.id==="meteor")||(activeEvent?.id==="blackhole"))||supernovaGone.has(id))return;if(activeEvent?.id==="alien"&&!alienCleared)return;setSelected(previous=>{const next=new Set(previous);if(next.has(id))next.delete(id);else next.add(id);return next})};
  const hoverSupernova=(id:string)=>{if(activeEvent?.id!=="supernova"||!supernovaIds.has(id))return;setSupernovaHovered(previous=>new Set(previous).add(id))};
  const answer=phase==="hint"||phase==="reveal"||phase==="score";
- const assistLines=phase==="play"&&timeLeft<=10,assistStars=phase==="play"&&timeLeft<=5,correctSelected=current.points.filter(p=>availableTargetIds.has(p.id)&&selected.has(p.id)).length,evaluatedRoundScore=results.at(-1)?.score??0,completion=availableTargetIds.size?Math.round(correctSelected/availableTargetIds.size*100):0;
+ const assistLines=false,assistStars=false,correctSelected=current.points.filter(p=>availableTargetIds.has(p.id)&&selected.has(p.id)).length,evaluatedRoundScore=results.at(-1)?.score??0,completion=availableTargetIds.size?Math.round(correctSelected/availableTargetIds.size*100):0;
  const status=phase==="idle"?"ATTRACT MODE · พร้อมเริ่มภารกิจ":phase==="question"?"อีเวนต์ประจำรอบ":phase==="hint"?"จดจำรูปกลุ่มดาว":phase==="countdown"?"เตรียมเข้าประจำตำแหน่ง":phase==="play"?"เลือกดาวที่ถูกต้อง":phase==="reveal"?"เฉลยคำตอบ":phase==="score"?"คะแนนรอบนี้":phase==="quickQuestion"?"คำถามโบนัส":"สรุปภารกิจ";
  const shownEvent=displayEvent??activeEvent;
  if(learnMode) return <StarExplorer onStart={()=>{setLearnMode(false);startGame()}} onExit={()=>setLearnMode(false)}/>;
