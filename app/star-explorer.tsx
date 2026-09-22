@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ZODIAC, ZODIAC_SIMPLIFIED, type SkyConstellation } from "./constellations";
 import { HOROSCOPES } from "./horoscope-data";
-import Sky3D, { FAR_LY, formatLy } from "./sky-3d";
+import { FAR_LY, formatLy } from "./sky-3d";
 import DEPTH from "./star-depth.json";
 
 type View = { k: number; tx: number; ty: number };
@@ -108,7 +108,6 @@ export default function StarExplorer({ onStart, onExit }: { onStart: () => void;
   const [viewed, setViewed] = useState<Set<string>>(() => new Set([ZODIAC[0].id]));
   const [picked, setPicked] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
-  const [is3D, setIs3D] = useState(false);
   const [view, setView] = useState<View>(() => fitView(boundsOf(ZODIAC_SIMPLIFIED[0]), { w: 100, h: 78 }, START_BOOST));
 
   const catalog = detail === "simple" ? ZODIAC_SIMPLIFIED : ZODIAC;
@@ -333,17 +332,12 @@ export default function StarExplorer({ onStart, onExit }: { onStart: () => void;
                 <button className={detail === "simple" ? "on" : ""} onClick={() => goTo(index, "simple")}>แบบในเกม</button>
                 <button className={detail === "real" ? "on" : ""} onClick={() => goTo(index, "real")}>ท้องฟ้าจริง</button>
               </div>
-              <div className="seg" role="group" aria-label="มุมมองแผนที่">
-                <button className={!is3D ? "on" : ""} onClick={() => setIs3D(false)}>แผนที่ 2D</button>
-                <button className={is3D ? "on" : ""} onClick={() => setIs3D(true)}>3 มิติ</button>
-              </div>
               <label className="fast-toggle"><input type="checkbox" checked={showLines} onChange={(e) => setShowLines(e.target.checked)} /><span />เส้นเชื่อม</label>
               <label className="fast-toggle"><input type="checkbox" checked={showLabels} onChange={(e) => setShowLabels(e.target.checked)} /><span />ชื่อดาว</label>
             </div>
           </div>
 
           <div className="explorer-stage" ref={stageRef} data-dragging={dragging ? "yes" : "no"}>
-            {!is3D && (
             <svg
               ref={svgRef}
               className="explorer-svg"
@@ -420,22 +414,18 @@ export default function StarExplorer({ onStart, onExit }: { onStart: () => void;
                 </g>
               </g>
             </svg>
-            )}
-            {is3D && (
-              <Sky3D key={current.id + detail} constellation={current} box={box} picked={picked} onPick={setPicked} showLines={showLines} showLabels={showLabels} alphaId={fact.alphaId} />
-            )}
 
             <button className="stage-nav prev" onClick={() => step(-1)} aria-label="กลุ่มดาวก่อนหน้า">‹</button>
             <button className="stage-nav next" onClick={() => step(1)} aria-label="กลุ่มดาวถัดไป">›</button>
 
-            <div className="stage-hint"><span className="live-dot" />{is3D ? "ลากเพื่อหมุนมุมกล้องรอบกลุ่มดาว · หมุนล้อเพื่อซูม · แตะดาวเพื่อดูระยะจริง" : "ลากเพื่อเลื่อนแผนที่ · หมุนล้อหรือบีบนิ้วเพื่อซูม · ดับเบิลคลิกซูมเข้า · แตะดาวเพื่อดูข้อมูล"}</div>
+            <div className="stage-hint"><span className="live-dot" />แผนที่กลุ่มดาวแบบเดียวกับในเกม · แตะดาวเพื่อดูข้อมูล · ลากหรือซูมเพื่อสำรวจ</div>
 
-            {!is3D && <div className="zoom-dock">
+            <div className="zoom-dock">
               <button onClick={() => zoomAt(1.3)} aria-label="ซูมเข้า">+</button>
               <button onClick={() => zoomAt(0.77)} aria-label="ซูมออก">−</button>
               <button className="fit" onClick={() => fitNow()} aria-label="พอดีจอ">⤢</button>
               <span className="zoom-read">{zoomPercent}%</span>
-            </div>}
+            </div>
 
             {pickedStar && (
               <div className="star-readout">
